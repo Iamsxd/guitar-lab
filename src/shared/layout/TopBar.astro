@@ -14,7 +14,7 @@ interface Props {
 const { locale, pathname } = Astro.props;
 const messages = getMessages(locale);
 const t = makeTranslator(messages);
-const base = `/${locale}`;
+const base = `${import.meta.env.BASE_URL}${locale}`;
 
 const sections = [
   {

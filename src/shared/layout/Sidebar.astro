@@ -12,7 +12,7 @@ const { locale, pathname } = Astro.props;
 const messages = getMessages(locale);
 const t = makeTranslator(messages);
 
-const base = `/${locale}`;
+const base = `${import.meta.env.BASE_URL}${locale}`;
 const tools = [
   { key: "fretboard", href: `${base}/tools/fretboard` },
   { key: "scales", href: `${base}/tools/scales` },

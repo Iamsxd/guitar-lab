@@ -62,11 +62,22 @@ A comprehensive interactive toolkit for guitar players, featuring chord visualiz
 
 ```bash
 pnpm install
-pnpm dev          # http://localhost:4321
+pnpm dev          # http://localhost:4321/guitar-lab/
 pnpm check        # astro check (TypeScript + Astro diagnostics)
 pnpm build        # static production build to ./dist
 pnpm preview      # preview the production build
 ```
+
+## GitHub Pages
+
+This fork is deployed at https://iamsxd.github.io/guitar-lab/.
+The `Deploy Guitar Lab to GitHub Pages` workflow builds and deploys pushes to `main`
+and can also be run manually from the Actions tab. Pages uses GitHub Actions as its
+build source. Navigation, language switching, and audio assets respect Astro's
+`BASE_URL` so the site works under `/guitar-lab/`.
+
+Microphone-based tools require permission and a secure context: use the HTTPS
+Pages URL or `localhost` when running locally.
 
 ## Project Structure
 

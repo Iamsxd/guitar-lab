@@ -13,6 +13,9 @@ const securityHeaders = {
 };
 
 export default defineConfig({
+  site: "https://iamsxd.github.io",
+  base: "/guitar-lab",
+  trailingSlash: "always",
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],

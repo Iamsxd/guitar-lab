@@ -22,8 +22,12 @@ export function LanguageSwitcher({
   pathname: string;
 }) {
   const switchTo = (next: Locale) => {
-    const stripped = pathname.replace(/^\/(en|de|pl)(?=\/|$)/, "") || "/";
-    const newPath = `/${next}${stripped === "/" ? "" : stripped}` || `/${next}`;
+    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+    const localPath = pathname.startsWith(`${base}/`)
+      ? pathname.slice(base.length)
+      : pathname;
+    const stripped = localPath.replace(/^\/(en|de|pl)(?=\/|$)/, "") || "/";
+    const newPath = `${base}/${next}${stripped === "/" ? "/" : stripped}`;
     window.location.assign(newPath);
   };
 

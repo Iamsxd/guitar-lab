@@ -30,7 +30,9 @@ export class AudioManager {
 
     const fileName = note.replace("#", "s");
     const tryLoad = async (ext: string) => {
-      const response = await fetch(`/audio/${fileName}${octave}.${ext}`);
+      const response = await fetch(
+        `${import.meta.env.BASE_URL}audio/${fileName}${octave}.${ext}`,
+      );
       if (!response.ok) throw new Error(`${ext} not found`);
       const buffer = await response.arrayBuffer();
       return this.audioContext!.decodeAudioData(buffer);

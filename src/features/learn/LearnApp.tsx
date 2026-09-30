@@ -9,7 +9,7 @@ function LearnContent({ locale }: { locale: Locale }) {
   const t = useTranslations("learn");
 
   const handleSelect = (pathId: string) => {
-    window.location.href = `/${locale}/learn/${pathId}`;
+    window.location.href = `${import.meta.env.BASE_URL}${locale}/learn/${pathId}`;
   };
 
   return (
