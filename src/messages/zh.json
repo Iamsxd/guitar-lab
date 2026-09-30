@@ -707,6 +707,8 @@
     "6th (thickest)": "第 6 弦（最粗）",
     "{count} note in composition": "乐谱包含 {count} 个音符",
     "{count} notes in composition": "乐谱包含 {count} 个音符",
-    "Guitar Fretboard": "吉他指板"
+    "Guitar Fretboard": "吉他指板",
+    "Practice — Guitar Lab": "每日练习 — Guitar Lab",
+    "Fretboard — Guitar Lab": "指板训练 — Guitar Lab"
   }
 }
