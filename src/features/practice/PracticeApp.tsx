@@ -1,5 +1,14 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { useCallback, useMemo, useState } from "react";
-import { Clock, Dumbbell, Lightbulb, RefreshCw, Shuffle, Target } from "lucide-react";
+import {
+  Clock,
+  Dumbbell,
+  Lightbulb,
+  RefreshCw,
+  Shuffle,
+  Target,
+} from "lucide-react";
 import type {
   Difficulty,
   PracticeExercise,
@@ -34,15 +43,19 @@ function capitalize(s: string): string {
 
 function pickInitial(): PracticeExercise {
   return (
-    pickExercise(EXERCISE_CATALOG, "chromatic", "beginner") ?? EXERCISE_CATALOG[0]
+    pickExercise(EXERCISE_CATALOG, "chromatic", "beginner") ??
+    EXERCISE_CATALOG[0]
   );
 }
 
-export default function PracticeApp() {
+function PracticeAppContent() {
+  const text = useText();
   const [practiceType, setPracticeType] = useState<PracticeType>("chromatic");
   const [difficulty, setDifficulty] = useState<Difficulty>("beginner");
   const [startFret, setStartFret] = useState(5);
-  const [exercise, setExercise] = useState<PracticeExercise>(() => pickInitial());
+  const [exercise, setExercise] = useState<PracticeExercise>(() =>
+    pickInitial(),
+  );
 
   const transposed = useMemo(
     () => transposeExercise(exercise, startFret),
@@ -93,14 +106,16 @@ export default function PracticeApp() {
     <div className="container mx-auto max-w-5xl space-y-6 p-4 md:p-8">
       <header className="mb-2 flex items-center gap-2">
         <Dumbbell className="size-8" />
-        <h1 className="text-4xl font-bold tracking-tight">Daily Practice</h1>
+        <h1 className="text-4xl font-bold tracking-tight">
+          {text("Daily Practice")}
+        </h1>
       </header>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Target className="size-5" />
-            Practice Settings
+            {text("Practice Settings")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -122,27 +137,31 @@ export default function PracticeApp() {
             <div className="space-y-1">
               <CardTitle className="flex items-center gap-2">
                 <Dumbbell className="size-5" />
-                {transposed.name}
+                {text(transposed.name)}
               </CardTitle>
               <p className="text-sm text-[var(--color-fg-muted)]">
-                {transposed.description}
+                {text(transposed.description)}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline" className={DIFFICULTY_CLASSES[transposed.difficulty]}>
-                {capitalize(transposed.difficulty)}
+              <Badge
+                variant="outline"
+                className={DIFFICULTY_CLASSES[transposed.difficulty]}
+              >
+                {text(capitalize(transposed.difficulty))}
               </Badge>
               <Badge variant="secondary" className="flex items-center gap-1">
                 <Clock className="size-3" />
-                {transposed.bpmSuggestion.min}–{transposed.bpmSuggestion.max} BPM
+                {transposed.bpmSuggestion.min}–{transposed.bpmSuggestion.max}{" "}
+                BPM
               </Badge>
               <Badge variant="outline">
                 {transposed.beatLength === 4
-                  ? "16ths"
+                  ? text("16ths")
                   : transposed.beatLength === 3
-                    ? "Triplets"
-                    : "8ths"}
+                    ? text("Triplets")
+                    : text("8ths")}
               </Badge>
             </div>
           </div>
@@ -154,7 +173,7 @@ export default function PracticeApp() {
           {transposed.tip && (
             <div className="flex items-start gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-accent-soft)] p-3 text-sm">
               <Lightbulb className="mt-0.5 size-4 shrink-0 text-[var(--color-accent)]" />
-              <p>{transposed.tip}</p>
+              <p>{text(transposed.tip)}</p>
             </div>
           )}
 
@@ -168,21 +187,32 @@ export default function PracticeApp() {
               title={
                 hasAlternatives
                   ? undefined
-                  : "Only one exercise of this type/difficulty — try changing the difficulty."
+                  : text(
+                      "Only one exercise of this type/difficulty — try changing the difficulty.",
+                    )
               }
             >
               <RefreshCw className="mr-2 size-4" />
-              Another {capitalize(practiceType)}
+              {text("Another")} {text(capitalize(practiceType))}
             </Button>
-            <Button onClick={handleRandomGenerate} variant="outline" className="flex-1">
+            <Button
+              onClick={handleRandomGenerate}
+              variant="outline"
+              className="flex-1"
+            >
               <Shuffle className="mr-2 size-4" />
-              Surprise Me
+              {text("Surprise Me")}
             </Button>
           </div>
           {!hasAlternatives && (
             <p className="text-center text-xs text-[var(--color-fg-muted)]">
-              This is the only {capitalize(practiceType)} exercise at the {difficulty} level.
-              Change the difficulty for more variety.
+              {text(
+                "This is the only {type} exercise at the {difficulty} level. Change the difficulty for more variety.",
+                {
+                  type: text(capitalize(practiceType)),
+                  difficulty: text(difficulty),
+                },
+              )}
             </p>
           )}
         </CardContent>
@@ -190,18 +220,50 @@ export default function PracticeApp() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Practice Tips</CardTitle>
+          <CardTitle className="text-lg">{text("Practice Tips")}</CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="list-inside list-disc space-y-2 text-sm text-[var(--color-fg-muted)]">
-            <li>Start at the slow end of the BPM range and only speed up once notes are clean.</li>
-            <li>The bottom row shows pick direction (▼ down, ▲ up) — follow it strictly.</li>
-            <li>Beat dividers and the count row (1 e + a) help lock the rhythm.</li>
-            <li>Highlighted notes are roots or anchors — emphasize them slightly.</li>
-            <li>5–10 minutes per exercise; rotate through types weekly.</li>
+            <li>
+              {text(
+                "Start at the slow end of the BPM range and only speed up once notes are clean.",
+              )}
+            </li>
+            <li>
+              {text(
+                "The bottom row shows pick direction (▼ down, ▲ up) — follow it strictly.",
+              )}
+            </li>
+            <li>
+              {text(
+                "Beat dividers and the count row (1 e + a) help lock the rhythm.",
+              )}
+            </li>
+            <li>
+              {text(
+                "Highlighted notes are roots or anchors — emphasize them slightly.",
+              )}
+            </li>
+            <li>
+              {text("5–10 minutes per exercise; rotate through types weekly.")}
+            </li>
           </ul>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function PracticeApp({
+  locale,
+  messages,
+}: {
+  locale: Locale;
+  messages: Messages;
+}) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <PracticeAppContent />
+    </I18nProvider>
   );
 }

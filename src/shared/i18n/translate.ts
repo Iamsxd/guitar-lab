@@ -28,3 +28,18 @@ export function makeTranslator(messages: Messages, namespace?: string) {
     });
   };
 }
+
+export function makeTextTranslator(messages: Messages) {
+  const entries = messages.ui as Record<string, string> | undefined;
+  return function text(value: string, params?: Params): string {
+    const raw =
+      entries && Object.prototype.hasOwnProperty.call(entries, value)
+        ? entries[value]
+        : value;
+    if (!params) return raw;
+    return raw.replace(PLACEHOLDER, (_, name: string) => {
+      const parameter = params[name];
+      return parameter === undefined ? `{${name}}` : String(parameter);
+    });
+  };
+}

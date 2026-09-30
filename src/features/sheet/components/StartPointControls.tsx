@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { SkipBack, SkipForward } from "lucide-react";
 import { Badge } from "@shared/ui/Badge";
 import { Button } from "@shared/ui/Button";
@@ -16,9 +17,10 @@ export function StartPointControls({
   onMoveStartPoint,
   onResetStartPoint,
 }: StartPointControlsProps) {
+  const text = useText();
   return (
     <div className="flex items-center gap-2">
-      <Label>Start Point:</Label>
+      <Label>{text("Start Point:")}</Label>
       <div className="flex gap-1">
         <Button
           onClick={() => onMoveStartPoint("prev")}
@@ -47,7 +49,7 @@ export function StartPointControls({
           size="sm"
           disabled={playbackStartIndex === 0}
         >
-          Reset
+          {text("Reset")}
         </Button>
       </div>
     </div>

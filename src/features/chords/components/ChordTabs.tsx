@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shared/ui/Tabs";
 import { ScrollArea } from "@shared/ui/ScrollArea";
 import type { ChordTabsProps } from "@shared/types/chord";
@@ -8,21 +9,28 @@ export function ChordTabs({
   filteredExtendedChords,
   handlePresetChange,
 }: ChordTabsProps) {
+  const text = useText();
   return (
     <Tabs defaultValue="standard" className="mt-4">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="standard">Standard</TabsTrigger>
-        <TabsTrigger value="extended">Extended</TabsTrigger>
+        <TabsTrigger value="standard">{text("Standard")}</TabsTrigger>
+        <TabsTrigger value="extended">{text("Extended")}</TabsTrigger>
       </TabsList>
 
       <TabsContent value="standard">
         <ScrollArea className="h-[420px] w-full pr-3">
-          <ChordList presets={filteredStandardChords} onPresetSelect={handlePresetChange} />
+          <ChordList
+            presets={filteredStandardChords}
+            onPresetSelect={handlePresetChange}
+          />
         </ScrollArea>
       </TabsContent>
       <TabsContent value="extended">
         <ScrollArea className="h-[420px] w-full pr-3">
-          <ChordList presets={filteredExtendedChords} onPresetSelect={handlePresetChange} />
+          <ChordList
+            presets={filteredExtendedChords}
+            onPresetSelect={handlePresetChange}
+          />
         </ScrollArea>
       </TabsContent>
     </Tabs>

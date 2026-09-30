@@ -1,4 +1,11 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@shared/ui/Select";
+import { useText } from "@shared/i18n/I18nProvider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@shared/ui/Select";
 
 const TUNINGS = [
   { value: "standard", label: "Standard (EADGBE)" },
@@ -14,16 +21,25 @@ type TuningSelectorProps = {
   disabled?: boolean;
 };
 
-export function TuningSelector({ value = "standard", onChange, disabled = false }: TuningSelectorProps) {
+export function TuningSelector({
+  value = "standard",
+  onChange,
+  disabled = false,
+}: TuningSelectorProps) {
+  const text = useText();
   return (
-    <Select onValueChange={(v) => onChange(v as TuningId)} value={value} disabled={disabled}>
+    <Select
+      onValueChange={(v) => onChange(v as TuningId)}
+      value={value}
+      disabled={disabled}
+    >
       <SelectTrigger className="w-full md:w-[220px]">
-        <SelectValue placeholder="Select Tuning" />
+        <SelectValue placeholder={text("Select Tuning")} />
       </SelectTrigger>
       <SelectContent>
         {TUNINGS.map((t) => (
           <SelectItem key={t.value} value={t.value}>
-            {t.label}
+            {text(t.label)}
           </SelectItem>
         ))}
       </SelectContent>

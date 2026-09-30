@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Guitar } from "lucide-react";
 import type { FloatingChordViewerProps } from "@shared/types/chord";
 import { Button } from "@shared/ui/Button";
@@ -22,6 +23,7 @@ export function ViewDiagram({
   selectedTheme,
   onThemeChange,
 }: ViewDiagramProps) {
+  const text = useText();
   return (
     <>
       <div className="md:hidden">
@@ -32,12 +34,14 @@ export function ViewDiagram({
                 onClick={() => onOpenChange(true)}
                 className="fixed bottom-6 right-6 z-50 rounded-full shadow-lg"
                 size="icon"
-                aria-label="View chord diagram"
+                aria-label={text("View chord diagram")}
               >
                 <Guitar className="size-5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="left">View chord diagram</TooltipContent>
+            <TooltipContent side="left">
+              {text("View chord diagram")}
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
@@ -47,7 +51,7 @@ export function ViewDiagram({
         className="hidden gap-2 md:inline-flex"
       >
         <Guitar className="size-4" />
-        View Diagram
+        {text("View Diagram")}
       </Button>
 
       <ChordModal

@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import type { ChordSVGProps, ChordNote, ChordTheme } from "@shared/types/chord";
 import { chordThemes } from "../data/themes";
 
@@ -103,6 +104,7 @@ function ChordDiagram({
   startingFret: number;
   theme: ChordTheme;
 }) {
+  const text = useText();
   const width = 300;
   const height = 400;
   const stringSpacing = width / 7;
@@ -127,8 +129,14 @@ function ChordDiagram({
       role="img"
       style={{ backgroundColor: theme.backgroundColor }}
     >
-      <title id="chordTitle">{chordName} Guitar Chord Diagram</title>
-      <desc id="chordDesc">Visual fingering for the {chordName} guitar chord</desc>
+      <title id="chordTitle">
+        {chordName} {text("Guitar Chord Diagram")}
+      </title>
+      <desc id="chordDesc">
+        {text("Visual fingering for the {name} guitar chord", {
+          name: chordName,
+        })}
+      </desc>
 
       <text
         x="50%"
@@ -221,8 +229,15 @@ function ChordDiagram({
 
         const visualFret = fret - startingFret + 1;
         if (visualFret >= 1 && visualFret <= 5) {
-          const cy = fretSpacing * visualFret + textMargin + topMargin - fretSpacing / 2;
-          return renderMarker(xPosition, cy, theme, finger, `note-${stringIndex}`);
+          const cy =
+            fretSpacing * visualFret + textMargin + topMargin - fretSpacing / 2;
+          return renderMarker(
+            xPosition,
+            cy,
+            theme,
+            finger,
+            `note-${stringIndex}`,
+          );
         }
         return null;
       })}
@@ -236,6 +251,7 @@ export function ChordSVG({
   startingFret,
   theme = chordThemes.classic,
 }: ChordSVGProps) {
+  const text = useText();
   const normalizedNotes = normalizeChordData(chord);
   const noteNames = [...normalizedNotes]
     .reverse()
@@ -257,8 +273,11 @@ export function ChordSVG({
       </div>
       {theme.showStringNames && (
         <div className="mt-4 text-center" style={{ color: theme.textColor }}>
-          <strong className="block mb-2" style={{ fontFamily: theme.fontFamily }}>
-            Notes:
+          <strong
+            className="block mb-2"
+            style={{ fontFamily: theme.fontFamily }}
+          >
+            {text("Notes:")}
           </strong>
           <p className="text-lg" style={{ fontFamily: theme.fontFamily }}>
             {noteNames.join(", ")}

@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { Locale, Messages } from "@shared/types/i18n";
-import { makeTranslator } from "./translate";
+import { makeTranslator, makeTextTranslator } from "./translate";
 
 type I18nContextValue = {
   locale: Locale;
@@ -30,9 +30,17 @@ export function useI18n(): I18nContextValue {
 
 export function useTranslations(namespace?: string) {
   const { messages } = useI18n();
-  return useMemo(() => makeTranslator(messages, namespace), [messages, namespace]);
+  return useMemo(
+    () => makeTranslator(messages, namespace),
+    [messages, namespace],
+  );
 }
 
 export function useLocale(): Locale {
   return useI18n().locale;
+}
+
+export function useText() {
+  const { messages } = useI18n();
+  return useMemo(() => makeTextTranslator(messages), [messages]);
 }

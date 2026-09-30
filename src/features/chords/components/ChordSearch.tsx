@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import type { ChangeEvent } from "react";
 import { Input } from "@shared/ui/Input";
 
@@ -7,12 +8,13 @@ type ChordSearchProps = {
 };
 
 export function ChordSearch({ searchTerm, onSearchChange }: ChordSearchProps) {
+  const text = useText();
   return (
     <Input
       type="text"
       value={searchTerm}
       onChange={onSearchChange}
-      placeholder="Search chords..."
+      placeholder={text("Search chords...")}
       className="w-full"
     />
   );

@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { ArrowDown, ArrowUp, Check } from "lucide-react";
 import { cn } from "@shared/lib/cn";
 import { Progress } from "@shared/ui/Progress";
@@ -32,6 +33,7 @@ export function ListeningPanel({
   tuningStatus,
   tuningAccuracy,
 }: ListeningPanelProps) {
+  const text = useText();
   const subtitle = detectedFrequency
     ? `${detectedFrequency.toFixed(1)} Hz`
     : signalLevel < 5
@@ -45,7 +47,7 @@ export function ListeningPanel({
           {detectedNote?.note || "--"}
         </div>
         <div className="text-base text-[var(--color-fg-muted)] sm:text-lg">
-          {subtitle}
+          {text(subtitle)}
         </div>
 
         <div className="mx-auto max-w-xs space-y-1">
@@ -53,13 +55,13 @@ export function ListeningPanel({
             className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]"
             aria-hidden="true"
           >
-            <span>Input level</span>
+            <span>{text("Input level")}</span>
             <span>{signalLevel}%</span>
           </div>
           <Progress
             value={signalLevel}
             className="h-1.5"
-            aria-label="Microphone input level"
+            aria-label={text("Microphone input level")}
           />
         </div>
 
@@ -73,7 +75,7 @@ export function ListeningPanel({
             )}
           >
             {STATUS_ICONS[tuningStatus]}
-            <span className="capitalize">{tuningStatus}</span>
+            <span className="capitalize">{text(tuningStatus)}</span>
           </div>
         )}
 
@@ -82,18 +84,18 @@ export function ListeningPanel({
             <Progress
               value={tuningAccuracy}
               className="h-2"
-              aria-label="Tuning accuracy"
+              aria-label={text("Tuning accuracy")}
             />
             <div
               className="flex justify-between text-xs text-[var(--color-fg-muted)]"
               aria-hidden="true"
             >
-              <span>♭ Flat</span>
-              <span>In Tune</span>
-              <span>Sharp ♯</span>
+              <span>{text("♭ Flat")}</span>
+              <span>{text("In Tune")}</span>
+              <span>{text("Sharp ♯")}</span>
             </div>
             <div className="text-xs text-[var(--color-fg-muted)] sm:text-sm">
-              String {detectedNote.string} • Target:{" "}
+              {text("String")} {detectedNote.string} {text("• Target:")}{" "}
               {detectedNote.frequency.toFixed(1)} Hz
             </div>
           </div>

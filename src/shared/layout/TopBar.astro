@@ -1,7 +1,7 @@
 ---
 import type { Locale } from "@shared/types/i18n";
 import { getMessages } from "@shared/i18n/getMessages";
-import { makeTranslator } from "@shared/i18n/translate";
+import { makeTranslator, makeTextTranslator } from "@shared/i18n/translate";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { MobileNav } from "./MobileNav";
 import { ThemeIsland } from "@shared/theme/ThemeIsland";
@@ -13,25 +13,35 @@ interface Props {
 
 const { locale, pathname } = Astro.props;
 const messages = getMessages(locale);
+const text = makeTextTranslator(messages);
 const t = makeTranslator(messages);
 const base = `${import.meta.env.BASE_URL}${locale}`;
 
 const sections = [
   {
-    label: "Overview",
-    links: [{ label: "Home", href: base }],
+    label: text("Overview"),
+    links: [{ label: text("Home"), href: base }],
   },
   {
     label: t("home.tools.title") || "Tools",
     links: [
-      { label: t("home.tools.fretboard.title"), href: `${base}/tools/fretboard` },
+      {
+        label: t("home.tools.fretboard.title"),
+        href: `${base}/tools/fretboard`,
+      },
       { label: t("home.tools.scales.title"), href: `${base}/tools/scales` },
       { label: t("home.tools.chords.title"), href: `${base}/tools/chords` },
       { label: t("home.tools.tuner.title"), href: `${base}/tools/tuner` },
       { label: t("home.tools.practice.title"), href: `${base}/tools/practice` },
-      { label: t("home.tools.noteDetector.title"), href: `${base}/tools/note-detector` },
-      { label: t("home.tools.chordDetector.title"), href: `${base}/tools/chord-detector` },
-      { label: "Sheet Composer", href: `${base}/tools/sheet` },
+      {
+        label: t("home.tools.noteDetector.title"),
+        href: `${base}/tools/note-detector`,
+      },
+      {
+        label: t("home.tools.chordDetector.title"),
+        href: `${base}/tools/chord-detector`,
+      },
+      { label: text("Sheet Composer"), href: `${base}/tools/sheet` },
     ],
   },
   {
@@ -48,13 +58,19 @@ const sections = [
     <MobileNav
       client:load
       brand="Guitar Lab"
+      menuLabel={text("Open menu")}
       sections={sections}
       pathname={pathname}
     />
     <span class="md:hidden text-base font-semibold">Guitar Lab</span>
   </div>
   <div class="flex items-center gap-1">
-    <ThemeIsland client:only="react" />
-    <LanguageSwitcher client:load locale={locale} pathname={pathname} />
+    <ThemeIsland client:only="react" locale={locale} messages={messages} />
+    <LanguageSwitcher
+      client:load
+      locale={locale}
+      pathname={pathname}
+      messages={messages}
+    />
   </div>
 </header>

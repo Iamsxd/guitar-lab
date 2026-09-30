@@ -1,3 +1,5 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { useState } from "react";
 import { Music2 } from "lucide-react";
 import { NOTES } from "@shared/types/music";
@@ -19,11 +21,12 @@ type ScalesAppProps = {
   height?: number;
 };
 
-export default function ScalesApp({
+function ScalesAppContent({
   tuning = standardTuning,
   width = 900,
   height = 300,
 }: ScalesAppProps) {
+  const text = useText();
   const [_guessedPositions, setGuessedPositions] = useState<NotePosition[]>([]);
   const [selectedScale, setSelectedScale] = useState<ScaleName>("Major");
   const [groundNote, setGroundNote] = useState<string>("C");
@@ -49,14 +52,18 @@ export default function ScalesApp({
 
   const scaleIntervals = SCALES[selectedScale];
   const scaleNotes = getScaleNotes(groundNote, [...scaleIntervals]);
-  const scalePositions = scaleNotes.flatMap((note) => getAllNotePositions(note, tuning));
+  const scalePositions = scaleNotes.flatMap((note) =>
+    getAllNotePositions(note, tuning),
+  );
 
   return (
     <div className="container mx-auto max-w-6xl space-y-8 p-4 md:p-8">
       <header className="text-center">
-        <h1 className="mb-2 text-4xl font-bold tracking-tight">Scale Viewer</h1>
+        <h1 className="mb-2 text-4xl font-bold tracking-tight">
+          {text("Scale Viewer")}
+        </h1>
         <p className="text-lg text-[var(--color-fg-muted)]">
-          Explore guitar scales and improve your playing
+          {text("Explore guitar scales and improve your playing")}
         </p>
       </header>
 
@@ -64,13 +71,13 @@ export default function ScalesApp({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <Music2 className="size-6" />
-            Scale Selector
+            {text("Scale Selector")}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold">Select Scale</h2>
+              <h2 className="text-lg font-semibold">{text("Select Scale")}</h2>
               <div className="flex flex-wrap gap-2">
                 {SCALE_NAMES.map((scale) => (
                   <Button
@@ -79,14 +86,16 @@ export default function ScalesApp({
                     variant={selectedScale === scale ? "primary" : "outline"}
                     onClick={() => handleScaleChange(scale)}
                   >
-                    {scale}
+                    {text(scale)}
                   </Button>
                 ))}
               </div>
             </div>
 
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold">Select Root Note</h2>
+              <h2 className="text-lg font-semibold">
+                {text("Select Root Note")}
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {NOTES.map((note) => (
                   <Button
@@ -116,5 +125,17 @@ export default function ScalesApp({
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function ScalesApp({
+  locale,
+  messages,
+  ...props
+}: { locale: Locale; messages: Messages } & ScalesAppProps) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <ScalesAppContent {...props} />
+    </I18nProvider>
   );
 }

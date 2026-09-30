@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Guitar, Download, Share2, ClipboardCopy, Palette } from "lucide-react";
 import type { ChordModalProps } from "@shared/types/chord";
 import {
@@ -26,6 +27,7 @@ export function ChordModal({
   selectedTheme = "classic",
   onThemeChange,
 }: ChordModalProps) {
+  const text = useText();
   const currentTheme = chordThemes[selectedTheme] || chordThemes.classic;
 
   const handleThemeChange = (theme: string) => {
@@ -38,8 +40,8 @@ export function ChordModal({
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `${chord.name} Chord`,
-        text: `Check out this ${chord.name} chord diagram`,
+        title: text("Chord {name}", { name: chord.name }),
+        text: text("Check out this {name} chord diagram", { name: chord.name }),
       });
     }
   };
@@ -60,7 +62,9 @@ export function ChordModal({
   };
 
   const handleCopy = () => {
-    const notation = chord.notes.map((n) => (n.fret === null ? "x" : n.fret)).join("-");
+    const notation = chord.notes
+      .map((n) => (n.fret === null ? "x" : n.fret))
+      .join("-");
     navigator.clipboard.writeText(`${chord.name}: ${notation}`);
   };
 
@@ -72,8 +76,12 @@ export function ChordModal({
             <div className="flex items-center gap-3">
               <Guitar className="size-6 text-[var(--color-accent)]" />
               <div>
-                <DialogTitle className="text-xl tracking-tight">{chord.name} Chord</DialogTitle>
-                <DialogDescription>Starting from fret {chord.startingFret}</DialogDescription>
+                <DialogTitle className="text-xl tracking-tight">
+                  {chord.name} {text("Chord")}
+                </DialogTitle>
+                <DialogDescription>
+                  {text("Starting from fret")} {chord.startingFret}
+                </DialogDescription>
               </div>
             </div>
 
@@ -81,7 +89,9 @@ export function ChordModal({
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Palette className="size-4" />
-                  <span className="hidden sm:inline">{currentTheme.name}</span>
+                  <span className="hidden sm:inline">
+                    {text(currentTheme.name)}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -89,7 +99,11 @@ export function ChordModal({
                   <DropdownMenuItem
                     key={key}
                     onClick={() => handleThemeChange(key)}
-                    className={selectedTheme === key ? "bg-[var(--color-accent-soft)]" : ""}
+                    className={
+                      selectedTheme === key
+                        ? "bg-[var(--color-accent-soft)]"
+                        : ""
+                    }
                   >
                     <span
                       aria-hidden
@@ -99,7 +113,7 @@ export function ChordModal({
                         borderColor: theme.textColor,
                       }}
                     />
-                    {theme.name}
+                    {text(theme.name)}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -122,7 +136,9 @@ export function ChordModal({
           {currentTheme.showStringNames && (
             <Card className="mt-4">
               <CardContent className="p-4">
-                <h3 className="mb-2 text-base font-semibold">Chord Type</h3>
+                <h3 className="mb-2 text-base font-semibold">
+                  {text("Chord Type")}
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {chord.name.split(" ").map((part, index) => (
                     <span
@@ -146,18 +162,33 @@ export function ChordModal({
         <DialogFooter className="border-t border-[var(--color-border)] px-6 py-4">
           <div className="flex w-full items-center justify-between">
             <div className="flex gap-2">
-              <Button variant="secondary" size="sm" className="gap-1.5" onClick={handleShare}>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="gap-1.5"
+                onClick={handleShare}
+              >
                 <Share2 className="size-4" />
-                Share
+                {text("Share")}
               </Button>
-              <Button variant="secondary" size="sm" className="gap-1.5" onClick={handleDownload}>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="gap-1.5"
+                onClick={handleDownload}
+              >
                 <Download className="size-4" />
-                Download
+                {text("Download")}
               </Button>
             </div>
-            <Button variant="primary" size="sm" className="gap-1.5" onClick={handleCopy}>
+            <Button
+              variant="primary"
+              size="sm"
+              className="gap-1.5"
+              onClick={handleCopy}
+            >
               <ClipboardCopy className="size-4" />
-              Copy
+              {text("Copy")}
             </Button>
           </div>
         </DialogFooter>

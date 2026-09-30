@@ -1,3 +1,5 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { useMemo, useState } from "react";
 import { AlertCircle, Mic, MicOff, Music } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@shared/ui/Alert";
@@ -13,7 +15,8 @@ import { topPitchClasses } from "./lib/chords";
 
 const DEFAULT_SENSITIVITY = 7;
 
-export default function ChordDetectorApp() {
+function ChordDetectorAppContent() {
+  const text = useText();
   const [sensitivity, setSensitivity] = useState(DEFAULT_SENSITIVITY);
   const { ensureAudioContext } = useAudioContext();
   const detector = useChordDetector({ ensureAudioContext, sensitivity });
@@ -36,7 +39,7 @@ export default function ChordDetectorApp() {
       <header className="mb-2 flex items-center gap-2">
         <Music className="size-8" />
         <h1 className="text-4xl font-bold tracking-tight">
-          Live Chord Detector
+          {text("Live Chord Detector")}
         </h1>
       </header>
 
@@ -45,7 +48,7 @@ export default function ChordDetectorApp() {
           <CardTitle className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2">
               <Music className="size-5" />
-              Listening
+              {text("Listening")}
             </div>
             <Button
               variant={detector.isActive ? "primary" : "outline"}
@@ -58,7 +61,7 @@ export default function ChordDetectorApp() {
               ) : (
                 <Mic className="size-4" />
               )}
-              {detector.isActive ? "Stop" : "Start"} Listening
+              {text(detector.isActive ? "Stop Listening" : "Start Listening")}
             </Button>
           </CardTitle>
         </CardHeader>
@@ -66,8 +69,8 @@ export default function ChordDetectorApp() {
           {detector.error && (
             <Alert variant="danger" className="mb-6">
               <AlertCircle className="size-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{detector.error}</AlertDescription>
+              <AlertTitle>{text("Error")}</AlertTitle>
+              <AlertDescription>{text(detector.error)}</AlertDescription>
             </Alert>
           )}
 
@@ -80,11 +83,11 @@ export default function ChordDetectorApp() {
               <div className="text-base text-[var(--color-fg-muted)] sm:text-lg">
                 {detector.isActive
                   ? detector.signalLevel < 5
-                    ? "Listening… (no signal)"
+                    ? text("Listening… (no signal)")
                     : detector.chord
-                      ? "Detected"
-                      : "Strum a chord…"
-                  : "Press start and strum a chord"}
+                      ? text("Detected")
+                      : text("Strum a chord…")
+                  : text("Press start and strum a chord")}
               </div>
 
               {detector.chord && (
@@ -93,20 +96,20 @@ export default function ChordDetectorApp() {
                     className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]"
                     aria-hidden="true"
                   >
-                    <span>Confidence</span>
+                    <span>{text("Confidence")}</span>
                     <span>{confidencePct}%</span>
                   </div>
                   <Progress
                     value={confidencePct}
                     className="h-1.5"
-                    aria-label="Chord match confidence"
+                    aria-label={text("Chord match confidence")}
                   />
                 </div>
               )}
 
               {detector.isActive && top3.length > 0 && (
                 <div className="text-xs text-[var(--color-fg-muted)] sm:text-sm">
-                  Strongest notes:{" "}
+                  {text("Strongest notes:")}{" "}
                   <span className="font-mono">
                     {top3.map((i) => PITCH_CLASS_NAMES[i]).join(" • ")}
                   </span>
@@ -119,13 +122,13 @@ export default function ChordDetectorApp() {
                     className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]"
                     aria-hidden="true"
                   >
-                    <span>Input level</span>
+                    <span>{text("Input level")}</span>
                     <span>{detector.signalLevel}%</span>
                   </div>
                   <Progress
                     value={detector.signalLevel}
                     className="h-1.5"
-                    aria-label="Microphone input level"
+                    aria-label={text("Microphone input level")}
                   />
                 </div>
               )}
@@ -150,20 +153,34 @@ export default function ChordDetectorApp() {
               step={1}
               onValueChange={(v) => setSensitivity(v[0])}
               className="w-full"
-              aria-label="Microphone sensitivity"
+              aria-label={text("Microphone sensitivity")}
             />
             <span className="w-16 shrink-0 text-right text-xs text-[var(--color-fg-muted)]">
-              Sens. {sensitivity}/10
+              {text("Sens.")} {sensitivity}/10
             </span>
           </div>
 
           <p className="mt-6 text-center text-xs text-[var(--color-fg-muted)] sm:text-sm">
-            Strum a chord cleanly and let it ring. Detection covers major,
-            minor, 7th, m7, maj7, sus, dim, and aug shapes. Polyphonic detection
-            is imperfect — slash chords and extended voicings may be misread.
+            {text(
+              "Strum a chord cleanly and let it ring. Detection covers major, minor, 7th, m7, maj7, sus, dim, and aug shapes. Polyphonic detection is imperfect — slash chords and extended voicings may be misread.",
+            )}
           </p>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function ChordDetectorApp({
+  locale,
+  messages,
+}: {
+  locale: Locale;
+  messages: Messages;
+}) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <ChordDetectorAppContent />
+    </I18nProvider>
   );
 }

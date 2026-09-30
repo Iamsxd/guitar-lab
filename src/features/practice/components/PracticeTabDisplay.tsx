@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import type { PracticeExercise } from "@shared/types/practice";
@@ -10,6 +11,7 @@ type PracticeTabDisplayProps = {
 };
 
 export function PracticeTabDisplay({ exercise }: PracticeTabDisplayProps) {
+  const text = useText();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -30,7 +32,7 @@ export function PracticeTabDisplay({ exercise }: PracticeTabDisplayProps) {
           size="sm"
           onClick={handleCopy}
           className="size-8 p-0"
-          aria-label="Copy tabs as ASCII"
+          aria-label={text("Copy tabs as ASCII")}
         >
           {copied ? (
             <Check className="size-4 text-[var(--color-success)]" />

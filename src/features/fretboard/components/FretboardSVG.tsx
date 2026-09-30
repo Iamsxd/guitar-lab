@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { useCallback, useMemo, useState, type KeyboardEvent } from "react";
 import { calculateNote } from "@shared/music/notes";
 import { Fretboard, FretboardMarker } from "@shared/music/Fretboard";
@@ -45,6 +46,7 @@ export function FretboardSVG({
   isNewbieMode,
   isEasyMode,
 }: FretboardSVGProps) {
+  const text = useText();
   const [focused, setFocused] = useState({ string: 0, fret: 0 });
 
   const noteColors = useMemo(
@@ -62,7 +64,9 @@ export function FretboardSVG({
           string: s,
           fret: f,
           note,
-          fill: isNewbieMode ? (noteColors[note] ?? "transparent") : "transparent",
+          fill: isNewbieMode
+            ? (noteColors[note] ?? "transparent")
+            : "transparent",
           label: isEasyMode ? note : undefined,
         });
       }
@@ -73,16 +77,28 @@ export function FretboardSVG({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<SVGSVGElement>) => {
       if (e.key === "ArrowUp") {
-        setFocused((p) => ({ ...p, string: clamp(p.string - 1, 0, STRING_COUNT - 1) }));
+        setFocused((p) => ({
+          ...p,
+          string: clamp(p.string - 1, 0, STRING_COUNT - 1),
+        }));
         e.preventDefault();
       } else if (e.key === "ArrowDown") {
-        setFocused((p) => ({ ...p, string: clamp(p.string + 1, 0, STRING_COUNT - 1) }));
+        setFocused((p) => ({
+          ...p,
+          string: clamp(p.string + 1, 0, STRING_COUNT - 1),
+        }));
         e.preventDefault();
       } else if (e.key === "ArrowLeft") {
-        setFocused((p) => ({ ...p, fret: clamp(p.fret - 1, 0, FRET_COUNT - 1) }));
+        setFocused((p) => ({
+          ...p,
+          fret: clamp(p.fret - 1, 0, FRET_COUNT - 1),
+        }));
         e.preventDefault();
       } else if (e.key === "ArrowRight") {
-        setFocused((p) => ({ ...p, fret: clamp(p.fret + 1, 0, FRET_COUNT - 1) }));
+        setFocused((p) => ({
+          ...p,
+          fret: clamp(p.fret + 1, 0, FRET_COUNT - 1),
+        }));
         e.preventDefault();
       } else if (e.key === "Enter" || e.key === " ") {
         onFretClick(focused.string, focused.fret + 1);
@@ -104,10 +120,11 @@ export function FretboardSVG({
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="application"
-      ariaLabel="Guitar Fretboard"
+      ariaLabel={text("Guitar Fretboard")}
     >
       {cells.map((c) => {
-        const isFocused = focused.string === c.string && focused.fret === c.fret - 1;
+        const isFocused =
+          focused.string === c.string && focused.fret === c.fret - 1;
         return (
           <FretboardMarker
             key={`cell-${c.string}-${c.fret}`}
@@ -118,7 +135,11 @@ export function FretboardSVG({
             strokeWidth={isFocused ? 2 : undefined}
             label={c.label}
             onClick={() => onFretClick(c.string, c.fret)}
-            ariaLabel={`String ${c.string + 1}, Fret ${c.fret}, Note ${c.note}`}
+            ariaLabel={text("String {string}, Fret {fret}, Note {note}", {
+              string: c.string + 1,
+              fret: c.fret,
+              note: c.note,
+            })}
           />
         );
       })}

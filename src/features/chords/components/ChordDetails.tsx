@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import type { Chord, ChordNote } from "@shared/types/chord";
 import { Input } from "@shared/ui/Input";
 import { Label } from "@shared/ui/Label";
@@ -24,11 +25,12 @@ export function ChordDetails({
   selectedTheme,
   onThemeChange,
 }: ChordDetailsProps) {
+  const text = useText();
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="space-y-2">
-          <Label htmlFor="chord-name">Chord Name</Label>
+          <Label htmlFor="chord-name">{text("Chord Name")}</Label>
           <Input
             id="chord-name"
             value={chord.name}
@@ -36,7 +38,7 @@ export function ChordDetails({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="starting-fret">Starting Fret</Label>
+          <Label htmlFor="starting-fret">{text("Starting Fret")}</Label>
           <Input
             type="number"
             id="starting-fret"
@@ -51,7 +53,7 @@ export function ChordDetails({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="chord-theme">Diagram Style</Label>
+          <Label htmlFor="chord-theme">{text("Diagram Style")}</Label>
           <ThemeSelector
             currentTheme={selectedTheme}
             onThemeChange={onThemeChange}

@@ -42,8 +42,8 @@ A comprehensive interactive toolkit for guitar players, featuring chord visualiz
 - Per-path progress display
 
 ### 🌐 Internationalization
-- Built-in Astro i18n with locales: **en**, **de**, **pl**
-- All locale prefixes (`/en/...`, `/de/...`, `/pl/...`) generated as static pages
+- Built-in Astro i18n with locales: **en**, **de**, **pl**, **zh** (简体中文)
+- All locale prefixes (`/en/...`, `/de/...`, `/pl/...`, `/zh/...`) generated as static pages
 
 ## Technology Stack
 
@@ -75,6 +75,12 @@ The `Deploy Guitar Lab to GitHub Pages` workflow builds and deploys pushes to `m
 and can also be run manually from the Actions tab. Pages uses GitHub Actions as its
 build source. Navigation, language switching, and audio assets respect Astro's
 `BASE_URL` so the site works under `/guitar-lab/`.
+
+Simplified Chinese is available at https://iamsxd.github.io/guitar-lab/zh/
+and from the language menu. English remains the default. Musical note and chord
+notation (C D E F G A B, C#, Bb, Am7, etc.) is unchanged. Existing keyed messages
+use `useTranslations`; previously English-only tool labels use `useText` and the
+`ui` dictionary, which falls back to the original text for other locales.
 
 Microphone-based tools require permission and a secure context: use the HTTPS
 Pages URL or `localhost` when running locally.
@@ -116,7 +122,7 @@ src/
 │           ├── sheet.astro
 │           └── tuner.astro
 │
-├── messages/                # en.json, de.json, pl.json
+├── messages/                # en.json, de.json, pl.json, zh.json
 ├── layouts/                 # BaseLayout.astro
 ├── styles/                  # globals.css (Tailwind v4 + theme tokens)
 └── env.d.ts

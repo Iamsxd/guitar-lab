@@ -1,3 +1,5 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { useEffect, useMemo, useState } from "react";
 import { AlertCircle, Guitar, Mic, MicOff } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@shared/ui/Alert";
@@ -22,7 +24,8 @@ import type { TunerNote, TuningId, TuningStatus } from "./types";
 
 const DEFAULT_SENSITIVITY = 7;
 
-export default function TunerApp() {
+function TunerAppContent() {
+  const text = useText();
   const [tuningId, setTuningId] = useState<TuningId>("standard");
   const [sensitivity, setSensitivity] = useState(DEFAULT_SENSITIVITY);
 
@@ -68,7 +71,9 @@ export default function TunerApp() {
     <div className="container mx-auto max-w-6xl space-y-6 p-4 md:p-8">
       <header className="mb-2 flex items-center gap-2">
         <Guitar className="size-8" />
-        <h1 className="text-4xl font-bold tracking-tight">Guitar Tuner</h1>
+        <h1 className="text-4xl font-bold tracking-tight">
+          {text("Guitar Tuner")}
+        </h1>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -78,7 +83,7 @@ export default function TunerApp() {
               <CardTitle className="flex flex-col items-center justify-between gap-4 sm:flex-row">
                 <div className="flex items-center gap-2">
                   <Guitar className="size-5" />
-                  Guitar Tuner
+                  {text("Guitar Tuner")}
                 </div>
                 <Button
                   variant={detector.isActive ? "primary" : "outline"}
@@ -91,7 +96,7 @@ export default function TunerApp() {
                   ) : (
                     <Mic className="size-4" />
                   )}
-                  {detector.isActive ? "Stop" : "Start"} Tuning
+                  {text(detector.isActive ? "Stop Tuning" : "Start Tuning")}
                 </Button>
               </CardTitle>
             </CardHeader>
@@ -99,8 +104,8 @@ export default function TunerApp() {
               {detector.error && (
                 <Alert variant="danger" className="mb-6">
                   <AlertCircle className="size-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{detector.error}</AlertDescription>
+                  <AlertTitle>{text("Error")}</AlertTitle>
+                  <AlertDescription>{text(detector.error)}</AlertDescription>
                 </Alert>
               )}
 
@@ -136,17 +141,34 @@ export default function TunerApp() {
 
               <div className="mt-6 text-center text-xs text-[var(--color-fg-muted)] sm:text-sm">
                 {detector.isActive
-                  ? "Play a single string to detect its pitch"
-                  : "Click on a note to play/stop the reference tone"}
+                  ? text("Play a single string to detect its pitch")
+                  : text("Click on a note to play/stop the reference tone")}
               </div>
             </CardContent>
           </Card>
         </div>
 
         <div className="lg:col-span-1">
-          <TuningGuide tuningLabel={TUNINGS[tuningId].label} notes={activeTuning} />
+          <TuningGuide
+            tuningLabel={TUNINGS[tuningId].label}
+            notes={activeTuning}
+          />
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TunerApp({
+  locale,
+  messages,
+}: {
+  locale: Locale;
+  messages: Messages;
+}) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <TunerAppContent />
+    </I18nProvider>
   );
 }

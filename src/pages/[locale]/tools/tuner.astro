@@ -1,4 +1,5 @@
 ---
+import { getMessages } from "@shared/i18n/getMessages";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import TunerApp from "@features/tuner/TunerApp";
 import { LOCALES, type Locale } from "@shared/types/i18n";
@@ -11,5 +12,5 @@ const { locale } = Astro.params as { locale: Locale };
 ---
 
 <BaseLayout locale={locale} title="Tuner — Guitar Lab">
-  <TunerApp client:load />
+  <TunerApp locale={locale} messages={getMessages(locale)} client:load />
 </BaseLayout>

@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { useState } from "react";
 import {
   Dialog,
@@ -22,7 +23,12 @@ type TutorialDialogProps = {
   };
 };
 
-export function TutorialDialog({ isOpen, onClose, translations }: TutorialDialogProps) {
+export function TutorialDialog({
+  isOpen,
+  onClose,
+  translations,
+}: TutorialDialogProps) {
+  const text = useText();
   const [currentStep, setCurrentStep] = useState(0);
   const lastIndex = translations.steps.length - 1;
   const isLast = currentStep === lastIndex;
@@ -42,7 +48,10 @@ export function TutorialDialog({ isOpen, onClose, translations }: TutorialDialog
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => (!open ? handleClose() : null)}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => (!open ? handleClose() : null)}
+    >
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold tracking-tight">
@@ -54,7 +63,7 @@ export function TutorialDialog({ isOpen, onClose, translations }: TutorialDialog
         </DialogHeader>
 
         <div className="mt-4 flex justify-center">
-          <div className="flex gap-1" aria-label="progress">
+          <div className="flex gap-1" aria-label={text("progress")}>
             {translations.steps.map((_, i) => (
               <div
                 key={i}
@@ -80,7 +89,9 @@ export function TutorialDialog({ isOpen, onClose, translations }: TutorialDialog
               {translations.previous ?? "Previous"}
             </Button>
             <Button onClick={handleNext} className="w-24">
-              {isLast ? (translations.start ?? "Start") : (translations.next ?? "Next")}
+              {isLast
+                ? (translations.start ?? "Start")
+                : (translations.next ?? "Next")}
             </Button>
           </div>
           <Button variant="ghost" onClick={handleClose}>

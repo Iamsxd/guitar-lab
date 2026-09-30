@@ -1,3 +1,5 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { useMemo, useState } from "react";
 import { AlertCircle, Ear, Mic, MicOff } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@shared/ui/Alert";
@@ -29,7 +31,8 @@ const STATUS_STYLES: Record<TuningStatus, string> = {
     "bg-[color-mix(in_oklab,var(--color-danger),transparent_85%)] text-[var(--color-danger)]",
 };
 
-export default function NoteDetectorApp() {
+function NoteDetectorAppContent() {
+  const text = useText();
   const [sensitivity, setSensitivity] = useState(DEFAULT_SENSITIVITY);
   const { ensureAudioContext } = useAudioContext();
   const detector = usePitchDetector({
@@ -40,7 +43,8 @@ export default function NoteDetectorApp() {
   });
 
   const note = useMemo(
-    () => (detector.frequency != null ? frequencyToNote(detector.frequency) : null),
+    () =>
+      detector.frequency != null ? frequencyToNote(detector.frequency) : null,
     [detector.frequency],
   );
 
@@ -54,7 +58,9 @@ export default function NoteDetectorApp() {
     <div className="container mx-auto max-w-3xl space-y-6 p-4 md:p-8">
       <header className="mb-2 flex items-center gap-2">
         <Ear className="size-8" />
-        <h1 className="text-4xl font-bold tracking-tight">Live Note Detector</h1>
+        <h1 className="text-4xl font-bold tracking-tight">
+          {text("Live Note Detector")}
+        </h1>
       </header>
 
       <Card>
@@ -62,7 +68,7 @@ export default function NoteDetectorApp() {
           <CardTitle className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2">
               <Ear className="size-5" />
-              Listening
+              {text("Listening")}
             </div>
             <Button
               variant={detector.isActive ? "primary" : "outline"}
@@ -75,7 +81,7 @@ export default function NoteDetectorApp() {
               ) : (
                 <Mic className="size-4" />
               )}
-              {detector.isActive ? "Stop" : "Start"} Listening
+              {text(detector.isActive ? "Stop Listening" : "Start Listening")}
             </Button>
           </CardTitle>
         </CardHeader>
@@ -83,8 +89,8 @@ export default function NoteDetectorApp() {
           {detector.error && (
             <Alert variant="danger" className="mb-6">
               <AlertCircle className="size-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{detector.error}</AlertDescription>
+              <AlertTitle>{text("Error")}</AlertTitle>
+              <AlertDescription>{text(detector.error)}</AlertDescription>
             </Alert>
           )}
 
@@ -106,9 +112,9 @@ export default function NoteDetectorApp() {
                   ? `${detector.frequency.toFixed(1)} Hz`
                   : detector.isActive
                     ? detector.signalLevel < 5
-                      ? "Listening… (no signal)"
-                      : "Listening…"
-                    : "Press start and play a note"}
+                      ? text("Listening… (no signal)")
+                      : text("Listening…")
+                    : text("Press start and play a note")}
               </div>
 
               {status && note && (
@@ -120,7 +126,7 @@ export default function NoteDetectorApp() {
                     STATUS_STYLES[status],
                   )}
                 >
-                  <span className="capitalize">{status}</span>
+                  <span className="capitalize">{text(status)}</span>
                   <span>
                     {note.cents >= 0 ? "+" : ""}
                     {note.cents.toFixed(1)}¢
@@ -133,18 +139,18 @@ export default function NoteDetectorApp() {
                   <Progress
                     value={accuracy}
                     className="h-2"
-                    aria-label="Pitch accuracy"
+                    aria-label={text("Pitch accuracy")}
                   />
                   <div
                     className="flex justify-between text-xs text-[var(--color-fg-muted)]"
                     aria-hidden="true"
                   >
-                    <span>♭ Flat</span>
-                    <span>In Tune</span>
-                    <span>Sharp ♯</span>
+                    <span>{text("♭ Flat")}</span>
+                    <span>{text("In Tune")}</span>
+                    <span>{text("Sharp ♯")}</span>
                   </div>
                   <div className="text-xs text-[var(--color-fg-muted)] sm:text-sm">
-                    Target: {note.targetFrequency.toFixed(1)} Hz
+                    {text("Target:")} {note.targetFrequency.toFixed(1)} Hz
                   </div>
                 </div>
               )}
@@ -155,13 +161,13 @@ export default function NoteDetectorApp() {
                     className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]"
                     aria-hidden="true"
                   >
-                    <span>Input level</span>
+                    <span>{text("Input level")}</span>
                     <span>{detector.signalLevel}%</span>
                   </div>
                   <Progress
                     value={detector.signalLevel}
                     className="h-1.5"
-                    aria-label="Microphone input level"
+                    aria-label={text("Microphone input level")}
                   />
                 </div>
               )}
@@ -180,19 +186,34 @@ export default function NoteDetectorApp() {
               step={1}
               onValueChange={(v) => setSensitivity(v[0])}
               className="w-full"
-              aria-label="Microphone sensitivity"
+              aria-label={text("Microphone sensitivity")}
             />
             <span className="w-16 shrink-0 text-right text-xs text-[var(--color-fg-muted)]">
-              Sens. {sensitivity}/10
+              {text("Sens.")} {sensitivity}/10
             </span>
           </div>
 
           <p className="mt-6 text-center text-xs text-[var(--color-fg-muted)] sm:text-sm">
-            Play a single note on your guitar to see its pitch live. Polyphonic
-            (full-chord) detection is coming next.
+            {text(
+              "Play a single note on your guitar to see its pitch live. Polyphonic (full-chord) detection is coming next.",
+            )}
           </p>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function NoteDetectorApp({
+  locale,
+  messages,
+}: {
+  locale: Locale;
+  messages: Messages;
+}) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <NoteDetectorAppContent />
+    </I18nProvider>
   );
 }

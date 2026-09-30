@@ -1,7 +1,7 @@
 ---
 import type { Locale } from "@shared/types/i18n";
 import { getMessages } from "@shared/i18n/getMessages";
-import { makeTranslator } from "@shared/i18n/translate";
+import { makeTranslator, makeTextTranslator } from "@shared/i18n/translate";
 import Icon from "./HeroIcons.astro";
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const messages = getMessages(locale);
+const text = makeTextTranslator(messages);
 const t = makeTranslator(messages, "home");
 const base = `${import.meta.env.BASE_URL}${locale}`;
 
@@ -51,8 +52,8 @@ const tools = [
   },
   {
     icon: "filetext",
-    title: "Sheet Composer",
-    description: "Compose simple melodies on a treble-clef staff.",
+    title: text("Sheet Composer"),
+    description: text("Compose simple melodies on a treble-clef staff."),
     href: `${base}/tools/sheet`,
     accent: "from-indigo-500/20 to-blue-500/20",
   },
@@ -130,7 +131,7 @@ const learningPaths = [
         class="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-1 text-xs font-medium text-[var(--color-fg-muted)]"
       >
         <span class="size-1.5 rounded-full bg-[var(--color-accent)]"></span>
-        Interactive guitar toolkit
+        {text("Interactive guitar toolkit")}
       </p>
       <h1
         class="text-4xl font-semibold leading-tight tracking-tight md:text-6xl"
@@ -191,7 +192,10 @@ const learningPaths = [
           </div>
           <div class="relative mt-auto inline-flex items-center gap-1 text-sm font-medium text-[var(--color-accent)]">
             {t("tools.launchTool")}
-            <Icon name="arrow" class="size-4 transition group-hover:translate-x-0.5" />
+            <Icon
+              name="arrow"
+              class="size-4 transition group-hover:translate-x-0.5"
+            />
           </div>
         </a>
       ))
@@ -199,7 +203,9 @@ const learningPaths = [
   </div>
 </section>
 
-<section class="border-t border-[var(--color-border)] bg-[var(--color-bg-elevated)]">
+<section
+  class="border-t border-[var(--color-border)] bg-[var(--color-bg-elevated)]"
+>
   <div class="mx-auto max-w-6xl px-4 py-16">
     <h2 class="mb-8 text-2xl font-semibold tracking-tight md:text-3xl">
       {t("learning.title")}
@@ -220,7 +226,10 @@ const learningPaths = [
             <ul class="space-y-2 text-sm">
               {path.features.map((feature) => (
                 <li class="flex items-center gap-2 text-[var(--color-fg-muted)]">
-                  <Icon name="arrow" class="size-3.5 text-[var(--color-accent)]" />
+                  <Icon
+                    name="arrow"
+                    class="size-3.5 text-[var(--color-accent)]"
+                  />
                   {feature}
                 </li>
               ))}

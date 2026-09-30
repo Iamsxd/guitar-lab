@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@shared/ui/Button";
 import {
@@ -9,13 +10,14 @@ import {
 import { useTheme } from "./ThemeProvider";
 
 export function ThemeToggle() {
+  const text = useText();
   const { theme, setTheme, resolvedTheme } = useTheme();
   const Icon = resolvedTheme === "dark" ? Moon : Sun;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Toggle theme">
+        <Button variant="ghost" size="icon" aria-label={text("Toggle theme")}>
           <Icon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -24,19 +26,19 @@ export function ThemeToggle() {
           onSelect={() => setTheme("light")}
           aria-current={theme === "light"}
         >
-          <Sun className="size-4" /> Light
+          <Sun className="size-4" /> {text("Light")}
         </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => setTheme("dark")}
           aria-current={theme === "dark"}
         >
-          <Moon className="size-4" /> Dark
+          <Moon className="size-4" /> {text("Dark")}
         </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => setTheme("system")}
           aria-current={theme === "system"}
         >
-          <Monitor className="size-4" /> System
+          <Monitor className="size-4" /> {text("System")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

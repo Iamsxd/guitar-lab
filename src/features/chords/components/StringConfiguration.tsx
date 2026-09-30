@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { useState, type MouseEvent, type TouchEvent } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Chord, ChordNote } from "@shared/types/chord";
@@ -21,7 +22,11 @@ type StringConfigurationProps = {
   onNoteChange: (index: number, field: keyof ChordNote, value: string) => void;
 };
 
-export function StringConfiguration({ chord, onNoteChange }: StringConfigurationProps) {
+export function StringConfiguration({
+  chord,
+  onNoteChange,
+}: StringConfigurationProps) {
+  const text = useText();
   const [activeFinger, setActiveFinger] = useState(1);
   const [lastActiveString, setLastActiveString] = useState<number | null>(null);
   const [windowStart, setWindowStart] = useState(0);
@@ -36,7 +41,10 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
     }
   };
 
-  const handleFretClick = (stringIndex: number, event: MouseEvent<HTMLDivElement>) => {
+  const handleFretClick = (
+    stringIndex: number,
+    event: MouseEvent<HTMLDivElement>,
+  ) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const relativePosition = Math.round(
       ((event.clientX - rect.left) / rect.width) * (FRETS_IN_WINDOW - 1),
@@ -47,7 +55,10 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
     setLastActiveString(stringIndex);
   };
 
-  const handleTouchMove = (stringIndex: number, event: TouchEvent<HTMLDivElement>) => {
+  const handleTouchMove = (
+    stringIndex: number,
+    event: TouchEvent<HTMLDivElement>,
+  ) => {
     event.preventDefault();
     const touch = event.touches[0];
     const rect = event.currentTarget.getBoundingClientRect();
@@ -64,12 +75,20 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
 
   const shiftWindow = (direction: "left" | "right") => {
     const shift = direction === "left" ? -FRETS_IN_WINDOW : FRETS_IN_WINDOW;
-    const newStart = Math.max(0, Math.min(MAX_FRET - FRETS_IN_WINDOW, windowStart + shift));
+    const newStart = Math.max(
+      0,
+      Math.min(MAX_FRET - FRETS_IN_WINDOW, windowStart + shift),
+    );
     setWindowStart(newStart);
   };
 
   const getPositionInWindow = (fret: number | null): number => {
-    if (fret === null || fret < windowStart || fret > windowStart + FRETS_IN_WINDOW) return -1;
+    if (
+      fret === null ||
+      fret < windowStart ||
+      fret > windowStart + FRETS_IN_WINDOW
+    )
+      return -1;
     return ((fret - windowStart) / (FRETS_IN_WINDOW - 1)) * 100;
   };
 
@@ -98,15 +117,21 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
 
   const isStringActive = (index: number) => lastActiveString === index;
   const isFretInWindow = (fret: number | null) =>
-    fret !== null && fret >= windowStart && fret < windowStart + FRETS_IN_WINDOW;
+    fret !== null &&
+    fret >= windowStart &&
+    fret < windowStart + FRETS_IN_WINDOW;
 
   return (
     <TooltipProvider>
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold tracking-tight">String Configuration</h3>
+          <h3 className="text-lg font-semibold tracking-tight">
+            {text("String Configuration")}
+          </h3>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-[var(--color-fg-muted)]">Finger:</span>
+            <span className="text-sm text-[var(--color-fg-muted)]">
+              {text("Finger:")}
+            </span>
             <div className="flex gap-1">
               {FINGER_OPTIONS.map((finger) => (
                 <button
@@ -135,19 +160,20 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
                 size="sm"
                 onClick={() => shiftWindow("left")}
                 disabled={windowStart === 0}
-                aria-label="Previous frets"
+                aria-label={text("Previous frets")}
               >
                 <ChevronLeft className="size-4" />
               </Button>
               <span className="text-sm font-medium">
-                Frets {windowStart} - {windowStart + FRETS_IN_WINDOW - 1}
+                {text("Frets")} {windowStart} -{" "}
+                {windowStart + FRETS_IN_WINDOW - 1}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => shiftWindow("right")}
                 disabled={windowStart >= MAX_FRET - FRETS_IN_WINDOW}
-                aria-label="Next frets"
+                aria-label={text("Next frets")}
               >
                 <ChevronRight className="size-4" />
               </Button>
@@ -159,7 +185,9 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
                   key={index}
                   className={
                     "flex items-center gap-4 rounded-lg p-2 transition " +
-                    (isStringActive(index) ? "bg-[var(--color-accent-soft)]" : "")
+                    (isStringActive(index)
+                      ? "bg-[var(--color-accent-soft)]"
+                      : "")
                   }
                 >
                   <Tooltip>
@@ -176,7 +204,7 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      String {6 - index} ({STRINGS[index]})
+                      {text("String")} {6 - index} ({STRINGS[index]})
                     </TooltipContent>
                   </Tooltip>
 
@@ -192,7 +220,9 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
                           <div
                             key={i}
                             className="absolute h-3 w-0.5 bg-[var(--color-border-strong)]"
-                            style={{ left: `${(i / (FRETS_IN_WINDOW - 1)) * 100}%` }}
+                            style={{
+                              left: `${(i / (FRETS_IN_WINDOW - 1)) * 100}%`,
+                            }}
                           >
                             <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-[var(--color-fg-muted)]">
                               {windowStart + i}
@@ -224,15 +254,20 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
                           <Input
                             type="number"
                             value={note.fret ?? ""}
-                            onChange={(e) => handleFretInputChange(index, e.target.value)}
+                            onChange={(e) =>
+                              handleFretInputChange(index, e.target.value)
+                            }
                             onFocus={() => setLastActiveString(index)}
                             className={
-                              "w-16 text-center " + (note.fret === null ? "opacity-60" : "")
+                              "w-16 text-center " +
+                              (note.fret === null ? "opacity-60" : "")
                             }
                             min={0}
                             max={MAX_FRET}
                             placeholder="-"
-                            aria-label={`Fret for string ${STRINGS[index]}`}
+                            aria-label={text("Fret for string {string}", {
+                              string: STRINGS[index],
+                            })}
                           />
                           {note.fret === null && (
                             <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold">
@@ -241,12 +276,14 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
                           )}
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent>Fret number</TooltipContent>
+                      <TooltipContent>{text("Fret number")}</TooltipContent>
                     </Tooltip>
 
                     <button
                       type="button"
-                      aria-label={`Mute string ${STRINGS[index]}`}
+                      aria-label={text("Mute string {string}", {
+                        string: STRINGS[index],
+                      })}
                       onClick={() => handleMute(index)}
                       className={
                         "flex size-8 items-center justify-center rounded-md border text-sm font-semibold transition " +
@@ -260,7 +297,9 @@ export function StringConfiguration({ chord, onNoteChange }: StringConfiguration
 
                     <button
                       type="button"
-                      aria-label={`Open string ${STRINGS[index]}`}
+                      aria-label={text("Open string {string}", {
+                        string: STRINGS[index],
+                      })}
                       onClick={() => handleOpen(index)}
                       className={
                         "flex size-8 items-center justify-center rounded-md border text-sm font-semibold transition " +

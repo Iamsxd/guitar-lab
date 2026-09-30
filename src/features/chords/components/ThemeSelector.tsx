@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Palette } from "lucide-react";
 import {
   Select,
@@ -26,13 +27,14 @@ export function ThemeSelector({
   onThemeChange,
   variant = "select",
 }: ThemeSelectorProps) {
+  const text = useText();
   if (variant === "dropdown") {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
             <Palette className="size-4" />
-            {chordThemes[currentTheme]?.name || "Theme"}
+            {text(chordThemes[currentTheme]?.name || "Theme")}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -40,10 +42,12 @@ export function ThemeSelector({
             <DropdownMenuItem
               key={key}
               onClick={() => onThemeChange(key)}
-              className={currentTheme === key ? "bg-[var(--color-accent-soft)]" : ""}
+              className={
+                currentTheme === key ? "bg-[var(--color-accent-soft)]" : ""
+              }
             >
               <ThemeSwatch theme={theme} />
-              {theme.name}
+              {text(theme.name)}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
@@ -63,7 +67,7 @@ export function ThemeSelector({
             className="gap-2"
           >
             <ThemeSwatch theme={theme} />
-            {theme.name}
+            {text(theme.name)}
           </Button>
         ))}
       </div>
@@ -75,7 +79,7 @@ export function ThemeSelector({
       <SelectTrigger className="w-full">
         <div className="flex items-center gap-2">
           <Palette className="size-4" />
-          <SelectValue placeholder="Select theme" />
+          <SelectValue placeholder={text("Select theme")} />
         </div>
       </SelectTrigger>
       <SelectContent>
@@ -83,7 +87,7 @@ export function ThemeSelector({
           <SelectItem key={key} value={key}>
             <div className="flex items-center gap-2">
               <ThemeSwatch theme={theme} />
-              {theme.name}
+              {text(theme.name)}
             </div>
           </SelectItem>
         ))}
@@ -92,12 +96,19 @@ export function ThemeSelector({
   );
 }
 
-function ThemeSwatch({ theme }: { theme: { backgroundColor: string; textColor: string } }) {
+function ThemeSwatch({
+  theme,
+}: {
+  theme: { backgroundColor: string; textColor: string };
+}) {
   return (
     <span
       aria-hidden
       className="inline-block size-4 rounded border"
-      style={{ backgroundColor: theme.backgroundColor, borderColor: theme.textColor }}
+      style={{
+        backgroundColor: theme.backgroundColor,
+        borderColor: theme.textColor,
+      }}
     />
   );
 }

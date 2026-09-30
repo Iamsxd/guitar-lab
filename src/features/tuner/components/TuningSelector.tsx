@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Label } from "@shared/ui/Label";
 import {
   Select,
@@ -15,10 +16,11 @@ type TuningSelectorProps = {
 };
 
 export function TuningSelector({ value, onChange }: TuningSelectorProps) {
+  const text = useText();
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <Label htmlFor="tuning-preset" className="shrink-0">
-        Tuning
+        {text("Tuning")}
       </Label>
       <Select value={value} onValueChange={(v) => onChange(v as TuningId)}>
         <SelectTrigger id="tuning-preset" className="w-full sm:w-[260px]">
@@ -27,7 +29,7 @@ export function TuningSelector({ value, onChange }: TuningSelectorProps) {
         <SelectContent>
           {TUNING_IDS.map((id) => (
             <SelectItem key={id} value={id}>
-              {TUNINGS[id].label}
+              {text(TUNINGS[id].label)}
             </SelectItem>
           ))}
         </SelectContent>

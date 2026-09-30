@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { cn } from "@shared/lib/cn";
 import { Button } from "@shared/ui/Button";
 import type { TunerNote } from "../types";
@@ -15,6 +16,7 @@ export function ReferenceTonesGrid({
   detectedNote,
   onToggle,
 }: ReferenceTonesGridProps) {
+  const text = useText();
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
       {notes.map((note) => {
@@ -31,13 +33,15 @@ export function ReferenceTonesGrid({
                   "ring-4 ring-[color-mix(in_oklab,var(--color-success),transparent_70%)]",
               )}
               onClick={() => onToggle(note)}
-              aria-label={`Play reference note ${note.note}`}
+              aria-label={text("Play reference note {note}", {
+                note: note.note,
+              })}
               aria-pressed={isSelected}
             >
               {note.note}
             </Button>
             <span className="mt-1 text-xs text-[var(--color-fg-muted)] sm:text-sm">
-              String {note.string}
+              {text("String")} {note.string}
             </span>
           </div>
         );

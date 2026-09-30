@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Pause, Play, RotateCcw, Trash2 } from "lucide-react";
 import { Button } from "@shared/ui/Button";
 import { Label } from "@shared/ui/Label";
@@ -29,6 +30,7 @@ export function PlaybackControls({
   onDeleteLast,
   onDurationChange,
 }: PlaybackControlsProps) {
+  const text = useText();
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
       <div className="flex gap-2">
@@ -38,12 +40,16 @@ export function PlaybackControls({
           className="gap-2"
           disabled={notesLength === 0}
         >
-          {isPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
-          {isPlaying ? "Stop" : "Play"}
+          {isPlaying ? (
+            <Pause className="size-4" />
+          ) : (
+            <Play className="size-4" />
+          )}
+          {isPlaying ? text("Stop") : text("Play")}
         </Button>
         <Button onClick={onClear} variant="secondary" className="gap-2">
           <Trash2 className="size-4" />
-          Clear
+          {text("Clear")}
         </Button>
         <Button
           onClick={onDeleteLast}
@@ -52,12 +58,12 @@ export function PlaybackControls({
           disabled={notesLength === 0}
         >
           <RotateCcw className="size-4" />
-          Undo
+          {text("Undo")}
         </Button>
       </div>
 
       <div className="flex items-center gap-2">
-        <Label htmlFor="duration">Duration:</Label>
+        <Label htmlFor="duration">{text("Duration:")}</Label>
         <Select value={selectedDuration} onValueChange={onDurationChange}>
           <SelectTrigger id="duration" className="w-[140px]">
             <SelectValue />
@@ -67,7 +73,7 @@ export function PlaybackControls({
               <SelectItem key={key} value={key}>
                 <span className="flex items-center gap-2">
                   <span className="text-lg">{value.symbol}</span>
-                  <span>{value.name}</span>
+                  <span>{text(value.name)}</span>
                 </span>
               </SelectItem>
             ))}

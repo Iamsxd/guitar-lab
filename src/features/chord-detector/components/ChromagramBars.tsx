@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { PITCH_CLASS_NAMES, type Chromagram } from "../lib/chromagram";
 
 type ChromagramBarsProps = {
@@ -7,6 +8,7 @@ type ChromagramBarsProps = {
 };
 
 export function ChromagramBars({ chroma, highlight }: ChromagramBarsProps) {
+  const text = useText();
   // Normalize for display so the tallest bar always reaches the top.
   let max = 0;
   for (let i = 0; i < 12; i++) if (chroma[i] > max) max = chroma[i];
@@ -16,7 +18,7 @@ export function ChromagramBars({ chroma, highlight }: ChromagramBarsProps) {
   return (
     <div
       className="grid grid-cols-12 gap-1 sm:gap-2"
-      aria-label="Pitch class energy"
+      aria-label={text("Pitch class energy")}
     >
       {PITCH_CLASS_NAMES.map((name, i) => {
         const pct = Math.round((chroma[i] / denom) * 100);

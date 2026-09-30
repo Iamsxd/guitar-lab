@@ -1,12 +1,7 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@shared/ui/Button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@shared/ui/Sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@shared/ui/Sheet";
 
 export type NavLink = {
   label: string;
@@ -22,10 +17,12 @@ export function MobileNav({
   brand,
   sections,
   pathname,
+  menuLabel,
 }: {
   brand: string;
   sections: NavSection[];
   pathname: string;
+  menuLabel: string;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -35,7 +32,7 @@ export function MobileNav({
         variant="ghost"
         size="icon"
         className="md:hidden"
-        aria-label="Open menu"
+        aria-label={menuLabel}
         onClick={() => setOpen(true)}
       >
         <Menu className="size-5" />

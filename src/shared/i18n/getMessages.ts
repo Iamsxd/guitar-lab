@@ -4,11 +4,13 @@ import { DEFAULT_LOCALE, LOCALES } from "@shared/types/i18n";
 import en from "@messages/en.json";
 import de from "@messages/de.json";
 import pl from "@messages/pl.json";
+import zh from "@messages/zh.json";
 
 const ALL: Record<Locale, Messages> = {
   en: en as Messages,
   de: de as Messages,
   pl: pl as Messages,
+  zh: zh as Messages,
 };
 
 export function getMessages(locale: string): Messages {

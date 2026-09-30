@@ -1,3 +1,5 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { Music } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@shared/ui/Card";
 import { Controls } from "./components/Controls";
@@ -6,7 +8,8 @@ import { StaffCanvas } from "./components/StaffCanvas";
 import { StatusDisplay } from "./components/StatusDisplay";
 import { useMusicComposer } from "./hooks/useMusicComposer";
 
-export default function SheetApp() {
+function SheetAppContent() {
+  const text = useText();
   const {
     notes,
     isPlaying,
@@ -32,10 +35,10 @@ export default function SheetApp() {
       <div className="space-y-2 text-center">
         <h1 className="flex items-center justify-center gap-3 text-4xl font-bold tracking-tight">
           <Music className="size-8 text-[var(--color-accent)]" />
-          Sheet Music Composer
+          {text("Sheet Music Composer")}
         </h1>
         <p className="text-[var(--color-fg-muted)]">
-          Click to add notes • Shift+Click to set start point
+          {text("Click to add notes • Shift+Click to set start point")}
         </p>
       </div>
 
@@ -68,11 +71,28 @@ export default function SheetApp() {
             tempo={tempo}
             onCanvasClick={handleCanvasClick}
           />
-          <StatusDisplay notes={notes} playbackStartIndex={playbackStartIndex} />
+          <StatusDisplay
+            notes={notes}
+            playbackStartIndex={playbackStartIndex}
+          />
         </CardContent>
       </Card>
 
       <Instructions />
     </div>
+  );
+}
+
+export default function SheetApp({
+  locale,
+  messages,
+}: {
+  locale: Locale;
+  messages: Messages;
+}) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <SheetAppContent />
+    </I18nProvider>
   );
 }

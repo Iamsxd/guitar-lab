@@ -1,7 +1,7 @@
 ---
 import type { Locale } from "@shared/types/i18n";
 import { getMessages } from "@shared/i18n/getMessages";
-import { makeTranslator } from "@shared/i18n/translate";
+import { makeTranslator, makeTextTranslator } from "@shared/i18n/translate";
 
 interface Props {
   locale: Locale;
@@ -10,6 +10,7 @@ interface Props {
 
 const { locale, pathname } = Astro.props;
 const messages = getMessages(locale);
+const text = makeTextTranslator(messages);
 const t = makeTranslator(messages);
 
 const base = `${import.meta.env.BASE_URL}${locale}`;
@@ -23,8 +24,8 @@ const tools = [
 
 const sections = [
   {
-    label: "Overview",
-    links: [{ label: "Home", href: base }],
+    label: text("Overview"),
+    links: [{ label: text("Home"), href: base }],
   },
   {
     label: t("home.tools.title") || "Tools",
@@ -33,10 +34,19 @@ const sections = [
         label: t(`home.tools.${tool.key}.title`),
         href: tool.href,
       })),
-      { label: t("home.tools.chordFinder.title"), href: `${base}/tools/chord-finder` },
-      { label: t("home.tools.noteDetector.title"), href: `${base}/tools/note-detector` },
-      { label: t("home.tools.chordDetector.title"), href: `${base}/tools/chord-detector` },
-      { label: "Sheet Composer", href: `${base}/tools/sheet` },
+      {
+        label: t("home.tools.chordFinder.title"),
+        href: `${base}/tools/chord-finder`,
+      },
+      {
+        label: t("home.tools.noteDetector.title"),
+        href: `${base}/tools/note-detector`,
+      },
+      {
+        label: t("home.tools.chordDetector.title"),
+        href: `${base}/tools/chord-detector`,
+      },
+      { label: text("Sheet Composer"), href: `${base}/tools/sheet` },
     ],
   },
   {
@@ -70,14 +80,12 @@ const isActive = (href: string) => {
       class="text-[var(--color-accent)]"
       aria-hidden="true"
     >
-      <path d="M11.9 12.1 4 20" />
-      <path d="m20 4-7.9 7.9" />
-      <circle cx="12" cy="12" r="3" />
-      <path d="M14 6V2l4 4h-4Z" />
+      <path d="M11.9 12.1 4 20"></path>
+      <path d="m20 4-7.9 7.9"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M14 6V2l4 4h-4Z"></path>
     </svg>
-    <a href={base} class="text-lg font-semibold tracking-tight"
-      >Guitar Lab</a
-    >
+    <a href={base} class="text-lg font-semibold tracking-tight">Guitar Lab</a>
   </div>
 
   <nav class="flex flex-col gap-6 overflow-y-auto px-3 py-5 scrollbar-thin">

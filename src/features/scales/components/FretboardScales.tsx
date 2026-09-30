@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Fretboard, FretboardMarker } from "@shared/music/Fretboard";
 import { NORMAL_COLORS } from "@shared/music/fretboardConstants";
 import type { NotePosition, Tuning } from "@shared/types/music";
@@ -19,6 +20,7 @@ export function FretboardScales({
   chordPositions,
   easyMode,
 }: FretboardScalesProps) {
+  const text = useText();
   return (
     <div className="relative w-full overflow-x-auto">
       <Fretboard tuning={tuning} width={width} height={height}>
@@ -34,7 +36,11 @@ export function FretboardScales({
               fill={fill}
               label={easyMode ? note : undefined}
               onClick={() => onFretClick(string, fret)}
-              ariaLabel={`String ${string + 1}, Fret ${fret}, Note ${note}`}
+              ariaLabel={text("String {string}, Fret {fret}, Note {note}", {
+                string: string + 1,
+                fret,
+                note,
+              })}
             />
           );
         })}

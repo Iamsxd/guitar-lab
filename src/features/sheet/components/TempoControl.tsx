@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import { Clock } from "lucide-react";
 import { Badge } from "@shared/ui/Badge";
 import { Label } from "@shared/ui/Label";
@@ -9,11 +10,12 @@ type TempoControlProps = {
 };
 
 export function TempoControl({ tempo, onTempoChange }: TempoControlProps) {
+  const text = useText();
   return (
     <div className="flex items-center gap-3">
       <Label className="flex items-center gap-1">
         <Clock className="size-4" />
-        Tempo:
+        {text("Tempo:")}
       </Label>
       <div className="flex items-center gap-2">
         <Slider

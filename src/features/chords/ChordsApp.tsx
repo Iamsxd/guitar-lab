@@ -1,3 +1,5 @@
+import { I18nProvider, useText } from "@shared/i18n/I18nProvider";
+import type { Locale, Messages } from "@shared/types/i18n";
 import { useEffect, useState } from "react";
 import { Guitar, Music, Settings2 } from "lucide-react";
 import type { ChordNote } from "@shared/types/chord";
@@ -9,7 +11,8 @@ import { ChordSVG } from "./components/ChordSVG";
 import { ViewDiagram } from "./components/ViewDiagram";
 import { useChordState } from "./hooks/useChordState";
 
-export default function ChordsApp() {
+function ChordsAppContent() {
+  const text = useText();
   const {
     currentChord,
     startingFret,
@@ -36,7 +39,11 @@ export default function ChordsApp() {
     localStorage.setItem("chordTheme", theme);
   };
 
-  const handleNoteChange = (index: number, field: keyof ChordNote, value: string) => {
+  const handleNoteChange = (
+    index: number,
+    field: keyof ChordNote,
+    value: string,
+  ) => {
     const numValue = value === "" ? null : parseInt(value, 10);
     handleNoteUpdate(index, { [field]: numValue });
   };
@@ -45,7 +52,9 @@ export default function ChordsApp() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <header className="mb-8 flex items-center gap-3">
         <Guitar className="size-7 text-[var(--color-accent)]" />
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Chord Tool</h1>
+        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+          {text("Chord Tool")}
+        </h1>
       </header>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -53,11 +62,14 @@ export default function ChordsApp() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Music className="size-5" />
-              Library
+              {text("Library")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ChordSearch searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+            <ChordSearch
+              searchTerm={searchTerm}
+              onSearchChange={handleSearchChange}
+            />
             <ChordTabs
               filteredStandardChords={filteredStandardChords}
               filteredExtendedChords={filteredExtendedChords}
@@ -71,7 +83,7 @@ export default function ChordsApp() {
             <div className="flex items-center justify-between gap-3">
               <CardTitle className="flex items-center gap-2">
                 <Settings2 className="size-5" />
-                Details
+                {text("Details")}
               </CardTitle>
               <ViewDiagram
                 chord={currentChord}
@@ -97,5 +109,19 @@ export default function ChordsApp() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function ChordsApp({
+  locale,
+  messages,
+}: {
+  locale: Locale;
+  messages: Messages;
+}) {
+  return (
+    <I18nProvider locale={locale} messages={messages}>
+      <ChordsAppContent />
+    </I18nProvider>
   );
 }

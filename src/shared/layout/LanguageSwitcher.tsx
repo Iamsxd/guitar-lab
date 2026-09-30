@@ -1,5 +1,7 @@
+import { makeTextTranslator } from "@shared/i18n/translate";
+import { localePath } from "@shared/i18n/localePath";
 import { Globe } from "lucide-react";
-import { LOCALES, type Locale } from "@shared/types/i18n";
+import { LOCALES, type Locale, type Messages } from "@shared/types/i18n";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,23 +14,23 @@ const LABELS: Record<Locale, string> = {
   en: "English",
   de: "Deutsch",
   pl: "Polski",
+  zh: "简体中文",
 };
 
 export function LanguageSwitcher({
   locale,
   pathname,
+  messages,
 }: {
   locale: Locale;
   pathname: string;
+  messages: Messages;
 }) {
+  const text = makeTextTranslator(messages);
   const switchTo = (next: Locale) => {
-    const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-    const localPath = pathname.startsWith(`${base}/`)
-      ? pathname.slice(base.length)
-      : pathname;
-    const stripped = localPath.replace(/^\/(en|de|pl)(?=\/|$)/, "") || "/";
-    const newPath = `${base}/${next}${stripped === "/" ? "/" : stripped}`;
-    window.location.assign(newPath);
+    window.location.assign(
+      localePath(pathname, import.meta.env.BASE_URL, next),
+    );
   };
 
   return (
@@ -38,10 +40,12 @@ export function LanguageSwitcher({
           variant="ghost"
           size="sm"
           className="gap-2"
-          aria-label="Switch language"
+          aria-label={text("Switch language")}
         >
           <Globe className="size-4" />
-          <span className="font-medium uppercase">{locale}</span>
+          <span className="font-medium uppercase">
+            {locale === "zh" ? "中文" : locale}
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-36">

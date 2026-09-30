@@ -1,3 +1,4 @@
+import { useText } from "@shared/i18n/I18nProvider";
 import type { Difficulty, PracticeType } from "@shared/types/practice";
 import { Label } from "@shared/ui/Label";
 import {
@@ -36,21 +37,22 @@ export function PracticeSettings({
   onStartFretChange,
   startFretDisabled = false,
 }: PracticeSettingsProps) {
+  const text = useText();
   return (
     <div className="grid gap-6 md:grid-cols-3">
       <div className="space-y-2">
-        <Label htmlFor="practice-type">Practice Type</Label>
+        <Label htmlFor="practice-type">{text("Practice Type")}</Label>
         <Select
           value={practiceType}
           onValueChange={(v) => onPracticeTypeChange(v as PracticeType)}
         >
           <SelectTrigger id="practice-type">
-            <SelectValue placeholder="Select type" />
+            <SelectValue placeholder={text("Select type")} />
           </SelectTrigger>
           <SelectContent>
             {PRACTICE_TYPES.map((t) => (
               <SelectItem key={t} value={t}>
-                {PRACTICE_TYPE_LABELS[t]}
+                {text(PRACTICE_TYPE_LABELS[t])}
               </SelectItem>
             ))}
           </SelectContent>
@@ -58,18 +60,18 @@ export function PracticeSettings({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="difficulty">Difficulty</Label>
+        <Label htmlFor="difficulty">{text("Difficulty")}</Label>
         <Select
           value={difficulty}
           onValueChange={(v) => onDifficultyChange(v as Difficulty)}
         >
           <SelectTrigger id="difficulty">
-            <SelectValue placeholder="Select difficulty" />
+            <SelectValue placeholder={text("Select difficulty")} />
           </SelectTrigger>
           <SelectContent>
             {DIFFICULTIES.map((d) => (
               <SelectItem key={d.value} value={d.value}>
-                {d.label}
+                {text(d.label)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -77,10 +79,16 @@ export function PracticeSettings({
       </div>
 
       <div className="space-y-2">
-        <Label className={startFretDisabled ? "text-[var(--color-fg-muted)]" : undefined}>
-          Starting Fret: {startFret}
+        <Label
+          className={
+            startFretDisabled ? "text-[var(--color-fg-muted)]" : undefined
+          }
+        >
+          {text("Starting Fret:")} {startFret}
           {startFretDisabled && (
-            <span className="ml-2 text-xs italic">(fixed for this exercise)</span>
+            <span className="ml-2 text-xs italic">
+              {text("(fixed for this exercise)")}
+            </span>
           )}
         </Label>
         <Slider

@@ -3,7 +3,8 @@ import "../styles/globals.css";
 import type { Locale } from "@shared/types/i18n";
 import Sidebar from "@shared/layout/Sidebar.astro";
 import TopBar from "@shared/layout/TopBar.astro";
-import { resolveLocale } from "@shared/i18n/getMessages";
+import { makeTextTranslator } from "@shared/i18n/translate";
+import { getMessages, resolveLocale } from "@shared/i18n/getMessages";
 
 interface Props {
   title?: string;
@@ -19,6 +20,7 @@ const {
 
 const locale = resolveLocale(localeProp ?? Astro.currentLocale);
 const pathname = Astro.url.pathname;
+const text = makeTextTranslator(getMessages(locale));
 ---
 
 <!doctype html>
@@ -26,19 +28,15 @@ const pathname = Astro.url.pathname;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <meta name="description" content={text(description)} />
     <meta name="generator" content={Astro.generator} />
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <title>{title}</title>
+    <title>{text(title)}</title>
     <script is:inline>
       (function () {
         try {
